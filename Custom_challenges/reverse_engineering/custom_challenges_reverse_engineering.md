@@ -1,6 +1,87 @@
 
 Custom challenges- Reverse engineering
 
+
+# 1. Joy division
+- crack the provided .elf file to obtain the flag
+
+## Solution:
+- so first the file palantinpackflag.txt is being manipulated and is saved in a file flag.txt.
+- reading through using ghidra we understand that flipbites manipulates bytes and function expand expands the size of conte. so first we reduce size of content and unflip the bits.
+- for even indexes it does bitwise NOT operation and for even index it does bitwise XOR operation starting 0x69 and adding 0x20 every time it occurs
+- First it allocates a new buffer which is twice the size of input and then it splits the bytes into two parts. It then combines the parts using & operator with a key in combination which is generated every time it is expanded. The dynamic key starts with 0x69, and then multiplied by 0x20 and then the combination used bvar1, so we swap order of the high and low halfs
+- the python script reverses the function by first reducing size of bits followed by flipping them.
+
+```
+def reverse_flipBits(data):
+    result = bytearray()
+    key = 0x69
+    var = False
+
+    for b in data:
+        if not var:
+            result.append(~b & 0xFF)
+        else:
+            result.append(b ^ key)
+            key = (key + 0x20) & 0xFF
+
+        var = not var
+
+    return bytes(result)
+
+
+def reverse_expand_once(data):
+    result = bytearray()
+    key = 0x69
+    var = False
+
+    for i in range(0, len(data), 2):
+        a = data[i]
+        b = data[i+1]
+
+        key_hi = (key >> 4) & 0xF
+        key_lo = key & 0xF
+
+        if not var:
+            lo = a & 0x0F
+            hi = b & 0xF0
+            original = hi | lo
+        else:
+            hi = a & 0xF0
+            lo = b & 0x0F
+            original = hi | lo
+
+        result.append(original)
+
+        key = (key * 0x0B) & 0xFF
+        var = not var
+
+    return bytes(result)
+
+
+def reverse_expand_n_times(data, n):
+    for _ in range(n):
+        data = reverse_expand_once(data)
+    return data
+
+with open("flag (1).txt", "rb") as f:
+    expanded = f.read()
+
+step1 = reverse_expand_n_times(expanded, 3)
+original = reverse_flipBits(step1)
+print(original.decode)
+```
+
+## Flag:
+```
+sunshine{C3A5ER_CR055ED_TH3_RUB1C0N}
+```
+## Concepts learnt:
+- i learnt more about python functions and how to write scripts to obtain flags
+- i learn about how to reverse files using ghidra and yunderstand the functions using registers and various other aspects of functions embedded in the assembly language
+***
+
+
 # 2. Worthy.knight
 - crack the provided .elf file
 
@@ -119,19 +200,49 @@ byuctf{android_piece_0f_c4ke}
 ***
 
 
+# 5. Dusty
+- open the three rust files to obtain the flag
 
+## Solution:
+- at first i put the file in ghidra and the main function has line ```_ZN3std2rt10lang_start17h91ff47afc442db24E``` which is the naming method used for the function ```_ZN10shinyclean4main17h4b15dd54e331d693E``` and this is for the main function shinyclean so we go to that function
+- in thet function the abstack_c7 is initialized with byte constants and now these bytes are indivdiually xored with 0x3f and produces another byte array
+- now this byte array is compared with PID a process id assigned and checks if it is equal to a specific value then it prints the new bbyte array so basically the new byte array is the flag
+- now i took the initiliazed charcaters individually and xored them with 0x3f to obtain the flag
+```
+7b ^ 3f = 44 - D
+5e ^ 3f = 61 - a
+48 ^ 3f = 77 - w
+58 ^ 3f = 67 - g
+7c ^ 3f = 43 - C
+6b ^ 3f = 54 - T
+79 ^ 3f = 46 - F
+44 ^ 3f = 7b - {
+79 ^ 3f = 46 - F
+6d ^ 3f = 52 - R
+0c ^ 3f = 33 - 3
+0c ^ 3f = 33 - 3
+60 ^ 3f = 5f - _
+7c ^ 3f = 43 - C
+0b ^ 3f = 34 - 4
+6d ^ 3f = 52 - R
+60 ^ 3f = 5f - _
+68 ^ 3f = 57 - W
+0b ^ 3f = 34 - 4
+0a ^ 3f = 35 - 5
+77 ^ 3f = 48 - H
+1e ^ 3f = 21 - !
+42 ^ 3f = 7d - }
+```
 
+## Flag:
+```
+DawgCTF{FR33_C4R_W45H!}
+```
+## Concepts learnt:
+- i learnt about rust as a whole and how they are reverse engineered thought this challenge didnt need that much
+## Notes:
 
+## Resources:
 
+***
 
-
-
-
-
-
-
-
-
-
-apktool d veridisQuo.apk -o app_files
-byuCTF{e4_if_e_efcopukd0inrccyat}
