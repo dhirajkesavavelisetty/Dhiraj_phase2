@@ -211,17 +211,99 @@ nite{t0_b3_XOR_n0t_t0_b3333}
 # 4. Willys chocolate experience
 - understand the python script and obtain the flag
 ## Solution:
-```
-```
+- The challenge converts the flag into a large integer using bytes_to_long and his integer is called the ticket.
+- Goal is to recover it from two consecutive values of a function f(m) = 13^m + 37^m (mod p)
+- We simplify the expression and solve the discrete log problem using Baby Step Giant Step (BSGS) and Pohlig-Hellman algorithms and then all the results are then combined using the Chinese Remainder Theorem, which gives us m-1 and converting this to bytes gives us the flag
 
+```
+from collections import Counter
+from Crypto.Util.number import inverse, long_to_bytes
+
+p = 396430433566694153228963024068183195900644000015629930982017434859080008533624204265038366113052353086248115602503012179807206251960510130759852727353283868788493357310003786807
+a = 208271276785711416565270003674719254652567820785459096303084135643866107254120926647956533028404502637100461134874329585833364948354858925270600245218260166855547105655294503224
+b = 124499652441066069321544812234595327614165778598236394255418354986873240978090206863399216810942232360879573073405796848165530765886142184827326462551698684564407582751560255175
+c = 37
+
+
+DLP_TARGET_BETA = ((a - 13 * b) * inverse(24, p)) % p
+
+def find_prime_factors(n, max_bound=2000000):
+    factors = Counter()
+    d = 2
+    temp_n = n
+    
+    while d * d <= temp_n and d <= max_bound:
+        while temp_n % d == 0:
+            factors[d] += 1
+            temp_n //= d
+        d = 3 if d == 2 else d + 2
+        
+    return factors, temp_n
+
+def baby_step_giant_step(base, target, modulus, exponent_limit):
+    m = int(pow(exponent_limit, 0.5)) + 1
+    
+    baby_table = {}
+    current_val = 1
+    for j in range(m):
+        if current_val not in baby_table:
+            baby_table[current_val] = j
+        current_val = (current_val * base) % modulus
+
+    step_size = pow(inverse(base, modulus), m, modulus)
+    
+    current_gamma = target
+    for i in range(m + 1):
+        if current_gamma in baby_table:
+            # Match found: x = i*m + j
+            j = baby_table[current_gamma]
+            return (i * m + j) % exponent_limit
+        current_gamma = (current_gamma * step_size) % modulus
+        
+    return None
+
+def pohlig_hellman(base, target, modulus):
+    
+    N = modulus - 1
+    
+    prime_factors, remainder = find_prime_factors(N)
+    if remainder != 1:
+        prime_factors[int(remainder)] += 1
+
+    parts = []
+    
+    for q, e in prime_factors.items():
+        pe = q ** e 
+        
+        subgroup_base = pow(base, N // pe, modulus)
+        subgroup_target = pow(target, N // pe, modulus)
+        
+        t = baby_step_giant_step(subgroup_base, subgroup_target, modulus, pe)
+        parts.append((t, pe)) 
+
+    overall_solution = 0
+    total_modulus = 1
+    for _, mod_i in parts:
+        total_modulus *= mod_i
+    
+    for congruence, mod_i in parts:
+        Mi = total_modulus // mod_i
+        overall_solution = (overall_solution + congruence * Mi * inverse(Mi, mod_i)) % total_modulus
+        
+    return overall_solution
+T_minus_1 = pohlig_hellman(c, DLP_TARGET_BETA, p)
+TICKET_INT = T_minus_1 + 1
+print(long_to_bytes(TICKET_INT).decode())
+```
 ## Flag:
 ```
-
+nite{g0ld3n_t1ck3t_t0_gl4sg0w}
 ```
 ## Concepts learnt:
-
-## Notes:
+- this was a very hard crypto challenge and took me a lot of effort
+- i learn about baby step small step, chinese remainder theorem etc and took a lot of new math concepts to understand
 
 ## Resources:
-
+-[Baby step giant step](https://en.wikipedia.org/wiki/Baby-step_giant-step)
+-[chinese remainder theorem](https://www.geeksforgeeks.org/dsa/introduction-to-chinese-remainder-theorem/)
 ***
