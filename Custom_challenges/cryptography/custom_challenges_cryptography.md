@@ -307,3 +307,29 @@ nite{g0ld3n_t1ck3t_t0_gl4sg0w}
 -[Baby step giant step](https://en.wikipedia.org/wiki/Baby-step_giant-step)
 -[chinese remainder theorem](https://www.geeksforgeeks.org/dsa/introduction-to-chinese-remainder-theorem/)
 ***
+
+
+# 5. SpAES Oddity
+- launch the server understand the encryption and obtain the flag
+## Solution:
+- the server takes the input with odd number of letters and adds the hidden flag after the message and pads with multiple of 16 letters of junk and encrypts with AES-ECB
+- AES-ECB is like photocopier where if two 16 letter junks are the same they become the same encrypted blob
+- so to break it first we sent exactly 15 letters so total 15+49=64 and 4 encrypted blocks
+- we put in the first encryption block which looked like the 15 A's and tried 256 combinations to get first real letter as n
+- repeating this 49 times each time replacing one more A with the letters guessing first 4 being n, i, t, e.. etc
+- Whenever the 16-letter we keyed in was identical to the real one including the hidden flag letters, the encryption gave us the exact same ciphertext as before.
+```
+- first 16-letter block was: AAAAAAAAAAAAAA + first letter of the flag (in hex 414141414141414141414141414141??) --> so first letter was n
+```
+## Flag:
+```
+nite{D4v1d_B0w13_1n_th3_5ky_w1th_d14m0nd5}
+```
+## Concepts learnt:
+- i learnt about AES-ECB oracle encryption
+- learning bout pwn tools for exploiting such servers
+- knowing that always python scripts dont work and manual try is very important to also get the flag as server might not give the response in accordance to the script
+## Resources:
+- [about ECB oracle](https://medium.com/@siyam.exe/day-3-ecb-oracle-cryptohack-92f4966cef4d)
+- [understanding/breaking AES-ECB](https://www.uptimeconsulting.no/breaking-aes-ecb-with-an-encryption-oracle-attack/)
+***
