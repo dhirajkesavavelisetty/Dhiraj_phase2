@@ -295,78 +295,133 @@ Soc alert triaging
 
 
 Day-11
+XSS
 
-# 1. 
-
+# 1. Leave the cookies 
+- cross site scripting or xss is a vulnerabilty that lets attackers inject code into input fields that reflect content viewed by other users
 ## Solution:
+- first we type in test in the search bar and the bar reflects the text itselft but now instaed of that we run a simple html code and to out surprise it runs the code and prints teh flag
+- in the next place when we typed out the message the message gets stored in the database so we send a simple html code and once we reload the page we observe that the code ran and hence this is stored crossside scripting and this gave out a flag as well
 
 ## Flag:
 ```
-
+- stored
+- THM{Evil_Bunny}
+- THM{Evil_Stroed_Egg}
 ```
 
 
 Day-12
+Phishing
 
-# 1. 
-
+# 1. Spotting Phishing Emails 
+- Phishing is a cyberattack where people impersonate trusted entities via emails, texts, or calls to trick people into revealing sensitive data or downloading malware, often by directing them to fake websites that look real
 ## Solution:
-
+- we look at the first email and observe all details properly so we select spoofing, sense of urgency and fak invoice and obtain the first flag 
+- the second email had a malicious attachment was clearly spoofing and showed signs of impersonation and obtain the flag
+- the thrid email was clearly impersonation and there great sense of urgency as well as social engineering text so thats for the third email
+- for the 4th email it is clearly trying to impersonate HR and was an external sender domain and because of the salary appraisel it is a social engineering text
+- The 5th email didnt have any links, attachments or false agenda hence it was just a simple spam email
+- the sender email replaced t with a curly brace so its clearly impersonation and they do have puny code so we choose that and social engineeering cause it mentions laptop upgrades
 ## Flag:
 ```
-
+- THM{yougotnumber1-keep-it-going}
+- THM{nmumber2-was-not-tha-thard!}
+- THM{Impersonation-is-areal-thing-keepit}
+- THM{Get-back-SOC-mas!!}
+- THM{It-was-just-a-sp4m!!}
+- THM{number6-is-the-last-one!-DX!}
 ```
 
 
 Day-13
+YARA rules
 
-# 1. 
-
+# 1. YARA
+- YARA is a tool built to identify and classify malware by searching for unique patterns, the digital fingerprints left behind by attackers
+- A YARA rule is built from several key elements:
+Metadata: information about the rule itself: who created it, when, and for what purpose.
+Strings: the clues YARA searches for: text, byte sequences, or regular expressions that mark suspicious content.
+Conditions: the logic that decides when the rule triggers, combining multiple strings or parameters into a single decisio
 ## Solution:
-
+- first we copy the given rule in a text editor where it extrcts an tbfc messages sent by mcskidy
+- so we create a yara rule which looks for strings starting with tbfc and from a-z and 0-9 and code inside a file. then we find 5 images containing string tbfc
+- now we go the regular expression string and based on the hind obtain the search code which is the answer
+- now we run the rule we ran previously which gave each image and a text so now we make a meaningufl message out of that text
 ## Flag:
 ```
-
+- 5
+- TBFC:[A-Za-z0-9]+
+- find me in hopsec island
 ```
 
 
 Day-14
+Containers
 
-# 1. 
-
+# 1. Container Security
+- Docker is an open-source platform for developers to build, deploy, and manage containers. Containers are executable units of software which package and manage the software and components to run a service. They are pretty lightweight because they isolate the application and use the host OS kernel.
+- A container escape is a technique that enables code running inside a container to obtain rights or execute on the host kernel (or other containers) beyond its isolated environment (escaping). For example, creating a privileged container with access to the public internet from a test container with no internet access. 
 ## Solution:
-
+- first we run docker ps and we see the services running and then copy thr main application ip address and navigate to the web and we see the hoperoo app.
+- we found an uptime checker container and run and we check the socket accessfor docker.sock and so we have access to the file and when we run the next command we attained controlled of the secured container and we type out cd .. to move out to the previous directory followed by ls and we see a flag.txt file
+- we run the recovery script using sudo command which reverses the server and door dashes website is restored
+- For the bonus question we naviagte to port 5002 on the wareville times were three words marked in red bold which turned out to be the required password
 ## Flag:
 ```
-
+- docker ps
+- Dockerfile
+- THM{DOCKER_ESCAPE_SUCCESS}
+- DeployMaster2025!
 ```
 
 
 Day-15
+Web Attack Forensics
 
-# 1. 
-
+# 1. Web attack foreniscs 
+- splunk is a platform for analysing and storing machine data and sysmon refers to system monitor that monitors log and various events happening within windows
 ## Solution:
-
+- first we type out the ip and port and login to out splunk account.
+- first we search for hhtp requests that might be malicious like cmd.exe or powershellwhich help identify command injection attacks and we are intreste din the base 64 encodings and paste the powershell commands in a base64 decoder
+- then we look for server side errors whiehc inspects apache error logs
+```
+- index=windows_apache_access (cmd.exe OR powershell OR "powershell.exe" OR "Invoke-Expression") | table _time host clientip uri_path uri_query status
+- index=windows_apache_error ("cmd.exe" OR "powershell" OR "Internal Server Error")
+- index=windows_sysmon ParentImage="*httpd.exe"
+- index=windows_sysmon *cmd.exe* *whoami*
+```
+- now we trace process creation from apache where the query focuses on process relationships for sysmon logs and ideally apache should spwan worker threads and not system processes
+- in the 4th query it finds what specific programs found before can do.
+- we go the original filename in the pslun dashboard and obtain the first answer
 ## Flag:
 ```
-
+- whoami.exe
+- powershell.exe
 ```
 
 
 Day-16
+Forensics
 
-# 1. 
-
+# 1. Investigating gifts of delivery malfunction
+- Windows OS is not a human, but it also needs a brain to store all its configurations. This brain is known as the Windows Registry. The registry contains all the information that the Windows OS needs for its functioning. 
+- Registry forensics is the process of extracting and analyzing evidence from the registry. In Windows digital forensic investigations, investigators analyze registry, event logs, file system data, memory data, and other relevant data to construct the whole incident timeline. 
 ## Solution:
-
+- first we open the registry and load the files into the registry and since sometimes these registry filesmight be dirty we use the skift key and then open to load associated transaction log files which ensures clean hive state.
+- first we go the directory which gives us info about install programs and there we naviaget to the 2025 packages and see a package installed from droneManager Updater which is suspicious
+- next for the path we go to \userassist which stores info about accesed applications launched via gui and we navigate to dronemanagersetup.exe and obtain the path
+- for the next answer we are required to naviagete to \run which consists of info of pragrams that automatically start and there we find out thirs answer
 ## Flag:
 ```
-
+- DroneManager Updater
+- C:\Users\dispatch.admin\Downloads\DroneManager_Setup.exe
+- "C:\Program Files\DroneManager\dronehelper.exe" --background
 ```
 
 
 Day-17
+Cyberchef
 
 # 1. 
 
