@@ -423,108 +423,176 @@ Forensics
 Day-17
 Cyberchef
 
-# 1. 
-
+# 1. Locks
+- crack the gates and obtain the password
 ## Solution:
-
+- first guard is cottontail and we naviaget to web developer tools and see the response headerss where we see aplications javascript file and use the help of base 64 decode and encoder and obtain the first password and important thing is we got to debugger and find the econding / decoidng form exactly to obtain the password so we shall keep that in mind
+- second guard is carrothelm so we followe the same process till debugger and do the same things after as well
+- third gate has a bit of xor enconding in it when we go to the debugger so we get the password and now we xor it using the key mentioned as cyberchef and then convert from base 64 to get the third password
+- so the 4th password is an md5 hash so we go to an md5 hash cracker so we decode the password from there
+- for 5th level we have different levels as well and since it is mentioned r2 it clearly says from base 64 from hex and reverse
 ## Flag:
 ```
-
+- iamsofluffy
+- Itoldyoutochangeit!
+- BugsBunny
+- passw0rd1
+- 51rBr34chBl0ck3r
+- THM{M3D13V4L_D3C0D3R_4D3P7}
 ```
 
 
 Day-18
+Obfuscation
 
-# 1. 
-
+# 1. Obfuscation & Deobfuscation
+- bfuscation is the practice of making data hard to read and analyze. Attackers use it to evade basic detection and delay investigations
 ## Solution:
-
+- we open a document on the desktop and first part was instructions of deobsfucation which is base64 encoded so we obtain the url by decoding it and then what we do it we excute the file to obtain the flag for deobsfucation
+- we go down to the task 2 for obfuscation and paste the output in the given space and obtain the flag for this task
 ## Flag:
 ```
-
+- THM{C2_De0bfuscation_29838}
+- THM{API_Obfusc4tion_ftw_0283}
 ```
 
 
 Day-19
+ICS/Modbus
 
-# 1. 
-
+# 1. SCADA (Supervisory Control and Data Acquisition) & PLC/Modbus protocol
+- SCADA systems are the "command centres" of industrial operations. They act as the bridge between human operators and the machines doing the work
+- A PLC (Programmable Logic Controller) is an industrial computer designed to control machinery and processes in real-world environments
+- Modbus is the communication protocol that industrial devices use to talk to each other, Modbus succeeded because it's simple, reliable, and works with almost any device.
 ## Solution:
-
+- the answer for the first task is given in the explanation where the port is commonly used for Modbus tcp connections
+- for the second task we followe the runthrough and the basic motto is to restore the drone control system and once when we restore the system we obtain the flag
 ## Flag:
 ```
-
+- 502
+- THM{eGgMas0V3r}
 ```
 
 
 Day-20
+Race conditions
 
-# 1. 
-
+# 1. Race condition
+- A race condition happens when two or more actions occur at the same time, and the system’s outcome depends on thebunny character showing car racing. order in which they finish. In web applications, this often happens when multiple users or automated requests simultaneously access or modify shared resources, such as inventory or account balances.
+- we use burp suite which acts as a middle man between website and broswer
 ## Solution:
-
+- first we switch off the intercept tab and then we checkout on the website and go to process checout page on burp suite.
+- we go to the repeaters tab and then we configure it by adding it into a cart group and duplicating it 10 times and sending the request and now when we go to the page and reload it we the oversold output of -2 and thats how we obtain the first flag
+- now we do the same thing by overselling the blue bunny plush and obtain the second flag
 ## Flag:
 ```
-
+- THM{WINNER_OF_R@CE007}
+- THM{WINNER_OF_Bunny_R@ce}
 ```
 
 
 Day-21
+Malware analysis
 
-# 1. 
-
+# 1. Malware analysis
+- HTA file, short for HTML Application. An HTA file is like a small desktop app built using familiar web technologies such as HTML, CSS, and JavaScript. Unlike regular web pages that open inside a browser, HTA files run directly on Windows through a built-in component called Microsoft HTML Application Host - mshta.exe process. This allows them to look and behave like lightweight programs with their own interfaces and actions
 ## Solution:
-
+- the answer for the first question is the title of the html file
+- the getQuestions spins the internet explorer application and havigates to the url that points to the txt file controled by the attacker and whoever texts on that page is deifned as the variale result to that function is the answer for the next question
+- the third answer is the url from the getQuestions function
+- malhare used two iis in the url to trick the user so that remains the answer for the next question
+- there were clearly 4 questions in the html file so that is the 5th answer
+- similarly by analysing the file we get the answers and flags to all the 13 questions
 ## Flag:
 ```
-
+- Best Festival Company Developer Survey
+- getQuestions
+- survey.bestfestiivalcompany.com
+- i
+- 4
+- South Pole
+- ComputerName,UserName
+- /details
+- GET
+- runObject.Run "powershell.exe -nop -w hidden -c " & feedbackString, 0, False
+- base64
+- rot13
+- THM{Malware.Analysed}
 ```
 
 
 Day-22
+C2 detection
 
-# 1. 
-
+# 1. Detecting C2 with RITA
+- Real Intelligence Threat Analytics (RITA) is an open-source framework created by Active Countermeasures. Its core functionality is to detect command and control (C2) communication by analyzing network traffic captures and logs
+- The magic behind RITA is its analytics. It correlates several captured fields, including IP addresses, ports, timestamps, and connection durations, among others
+- RITA only accepts network traffic input as Zeek logs. Zeek is an open-source network security monitoring (NSM) tool. Zeek is not a firewall or IPS/IDS; it does not use signatures or specific rules to take an action. It simply observes network traffic via configured SPAN ports, physical network taps, or imported packet captures in the PCAP format
 ## Solution:
+- first we shal convert our pcap netwrok capture to zeek logs and naviagte to the specific directory created by the command and find all the zeek logs
+```
+zeek readpcap <pcapfile> <outputdirectory>
+```
+- no to analyse using RITA we use `rita view <database-name>`
+- now we use the sam analysis to anylase the given pcap file
 
 ## Flag:
 ```
-
+- 6
+- Prevalence
+- 40
+- dst:rabbithole.malhare.net beacon:>-70 sort:duration-desc
+- 80
 ```
 
 
 Day-23
+AWS security
 
-# 1. 
-
+# 1. using aws security
+- exploring the aws security portal and running specific commands to obtain the flags
 ## Solution:
+- for the first flag we simply run the given command to obtain the answer
+- the second answer is a simple questions wher the IAM permissions are described in the policy
+- we run the command that has been given and in the ouput the policy name has been given so that remains the answer for the next question
 
 ## Flag:
 ```
-
+- 123456789012
+- policy
+- SirCarrotbanePolicy
+- ListAllMyBuckets
+- THM{more_like_sir_cloudbane}
 ```
 
 
 Day-24
+Exploitations with cUrl
 
-# 1. 
-
+# 1. Web hacking using cUrl
+- curl is a command-line tool for crafting HTTP requests and viewing raw responses. It's ideal when you need precision or when GUI tools aren't available.
+- -X POST tells cURL to use the POST method.
+- d defines the data we're sending in the body of the request.
 ## Solution:
-
+- Once you log in, web applications use cookies to keep your session active. When you make another request with your browser, the cookie gets sent automatically, but with cURL, you need to handle it by ourself like the -c option writes any cookies received from the server into a file and then we can send POST requests and manage sessions
+- command for the first flag
+```
+curl -i -X POST -d "username=admin&password=admin" http://10.67.173.159/post.php
+```
+- command for the second flag
+```
+curl -c cookies.txt -d "username=admin&password=admin" http://10.67.173.159/cookie.php
+```
+- for the third flag we create a passwords.txt file and paste the given passwords and create a loop trying each password and running thr bruteforce to obtain the correct password
+- some applications block cURL by checking the User-Agent header
+```
+curl -i -A "internalcomputer" http://MACHINE_IP/ua_check.php
+```
 ## Flag:
 ```
-
-```
-
-
-Day-25
-
-# 1. 
-
-## Solution:
-
-## Flag:
-```
-
+- THM{curl_post_success}
+- THM{session_cookie_master}
+- secretpass
+- THM{user_agent_filter_bypassed}
 ```
 
